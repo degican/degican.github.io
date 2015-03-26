@@ -1,0 +1,134 @@
+<html>
+	<head>
+		<title>エンペンメンジェネレータ</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	</head>
+	<body>
+		<h3>エンペンメンジェネレータ</h3>	
+		<script type="text/javascript">
+
+var jsonObj = {
+  "ジャ": "ジェ",
+  "ム": "メ",
+  "オ": "ェ",
+  "バ": "べ",
+  "タ": "テ",
+  "コ": "ク",
+  "サ": "ス",
+  "ア": "エ",
+  "パ": "ペ",
+  "マ": "メ",
+  "ロ": "レ",
+  "ナ": "ネ",
+  "ショ": "セ",
+  "ド": "デ",
+  "カ": "ケ",
+  "チャ": "チェ",
+  "テ": "ティ",
+  "チ": "ツェ",
+  "ハ": "ファ",
+  "ビ": "ヴィ",
+  "ワ": "ェ",
+  "リ": "レ",
+  "ガ": "ゲイ",
+  "ダ": "デイ",
+  "バイ": "ヴァイ",
+  "パンナ":"パンネ",
+  "コサン":"クスゥン"
+}
+
+function getEnpenmenJson(str)
+{
+	// alert(str);
+	if( str.length == 0 ) {
+		return "";
+	}
+	else{
+		var result = jsonObj[""+str];
+		if (result == undefined ) {
+			return str;
+		}
+		return result;
+	}
+}
+
+function isExistEnpenmenJson(str)
+{
+	if( str.length == 0 ) {
+		return false;
+	}
+	else{
+		var result = jsonObj[""+str];
+		if (result == undefined ) {
+			return false;
+		}
+	}
+	return true;
+}
+
+function getEnpenmenText(str)
+{
+	var string = str.replace(/[ぁ-ん]/g, function(s) {
+   return String.fromCharCode(s.charCodeAt(0) + 0x60);
+	});
+
+	var count = 0;
+	var strLength = string.length;
+	var result = "";
+	if ( strLength == 1 ) {
+		return getEnpenmenJson(string);
+	}
+
+	for (var i = 0; i < strLength; i++) {
+		var temp = "";
+
+		for (var j = 3; j > 1; j--) {
+			var check = string.substr( count, j );
+			if( isExistEnpenmenJson( check ) == true ) {
+				temp = check;
+				count += j;
+				break;
+			}
+		}
+		if( temp.length == 0 ){
+			temp = string.substr( count, 1 );
+			count += 1;
+		}
+		result += getEnpenmenJson(temp);
+		
+		if ( count >= strLength ) {break;}
+	}	
+	return result;
+}
+
+function onClick()
+{
+	createEnpenmen();
+}
+
+function createEnpenmen()
+{
+	document.getElementById('generated').innerHTML = getEnpenmenText(document.en.penText.value);
+}
+
+function onEnter(e){
+    if (!e) var e = window.event;
+ 
+    if(e.keyCode == 13){
+    	createEnpenmen();
+    	return false;
+    }
+}
+
+</script>
+<!-- google analytics -->
+<script type="text/javascript">
+ </script>
+ <form name="en" action="#">
+	 <input type="text" name="penText" value="アンパンマン" onKeyPress="return onEnter(event);" />
+	 <input type="button" value="men" onclick="onClick()" />
+ </form>
+ <div style="border: solid 1px black;">
+	 <p id="generated">結果</p>
+ </div>
+ </html>
